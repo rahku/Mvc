@@ -538,63 +538,162 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
 
         public IEnumerable<KeyValuePair<string, ModelState>> FindKeysWithPrefix([NotNull] string prefix)
         {
-            ModelState exactMatchValue;
-            if (_innerDictionary.TryGetValue(prefix, out exactMatchValue))
+            return new PrefixEnumerable(this, prefix);
+        }
+
+        public static bool IsPrefixMatch(string prefix, string candidate)
+        {
+            if (candidate.Length <= prefix.Length)
             {
-                yield return new KeyValuePair<string, ModelState>(prefix, exactMatchValue);
+                return false;
             }
 
-            foreach (var entry in _innerDictionary)
+            if (!candidate.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             {
-                var key = entry.Key;
 
-                if (key.Length <= prefix.Length)
+                if (candidate.StartsWith("[", StringComparison.OrdinalIgnoreCase))
                 {
-                    continue;
-                }
+                    var subKey = candidate.Substring(candidate.IndexOf('.') + 1);
 
-                if (!key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                {
-
-                    if (key.StartsWith("[", StringComparison.OrdinalIgnoreCase))
+                    if (!subKey.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                     {
-                        var subKey = key.Substring(key.IndexOf('.') + 1);
-
-                        if (!subKey.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        if (string.Equals(prefix, subKey, StringComparison.Ordinal))
-                        {
-                            yield return entry;
-                            continue;
-                        }
-
-                        key = subKey;
+                        return false;
                     }
-                    else
+
+                    if (string.Equals(prefix, subKey, StringComparison.Ordinal))
                     {
-                        continue;
+                        return true;
                     }
-                }
 
-                // Everything is prefixed by the empty string
-                if (prefix.Length == 0)
-                {
-                    yield return entry;
+                    candidate = subKey;
                 }
                 else
                 {
-                    var charAfterPrefix = key[prefix.Length];
-                    switch (charAfterPrefix)
+                    return false;
+                }
+            }
+
+            // Everything is prefixed by the empty string
+            if (prefix.Length == 0)
+            {
+                return true;
+            }
+            else
+            {
+                var charAfterPrefix = candidate[prefix.Length];
+                switch (charAfterPrefix)
+                {
+                    case '[':
+                    case '.':
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public struct PrefixEnumerable : IEnumerable<KeyValuePair<string, ModelState>>
+        {
+            private readonly ModelStateDictionary _modelState;
+            private readonly string _prefix;
+
+            public PrefixEnumerable(ModelStateDictionary modelState, string prefix)
+            {
+                _modelState = modelState;
+                _prefix = prefix;
+            }
+
+            public PrefixEnumerator GetEnumerator()
+            {
+                return new PrefixEnumerator(_modelState, _prefix);
+            }
+
+            IEnumerator<KeyValuePair<string, ModelState>> IEnumerable<KeyValuePair<string, ModelState>>.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+        }
+
+        public struct PrefixEnumerator : IEnumerator<KeyValuePair<string, ModelState>>
+        {
+            private readonly ModelStateDictionary _modelState;
+            private readonly string _prefix;
+
+            private IEnumerator<KeyValuePair<string, ModelState>> _enumerator;
+            private ModelState _first;
+
+            public PrefixEnumerator(ModelStateDictionary modelState, string prefix)
+            {
+                _modelState = modelState;
+                _prefix = prefix;
+
+                _enumerator = null;
+                _first = null;
+            }
+
+            public KeyValuePair<string, ModelState> Current
+            {
+                get
+                {
+                    if (_first != null)
                     {
-                        case '[':
-                        case '.':
-                            yield return entry;
-                            break;
+                        return new KeyValuePair<string, ModelState>(_prefix, _first);
+                    }
+                    else if (_enumerator != null)
+                    {
+                        return _enumerator.Current;
+                    }
+                    else
+                    {
+                        return default(KeyValuePair<string, ModelState>);
                     }
                 }
+            }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    return Current;
+                }
+            }
+
+            public void Dispose()
+            {
+            }
+
+            public bool MoveNext()
+            {
+                if (_enumerator == null)
+                {
+                    _enumerator = _modelState.GetEnumerator();
+                    if (_modelState.TryGetValue(_prefix, out _first))
+                    {
+                        return true;
+                    }
+                }
+
+                _first = null;
+
+                while (_enumerator.MoveNext())
+                {
+                    if (IsPrefixMatch(_prefix, _enumerator.Current.Key))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            public void Reset()
+            {
+                _enumerator = null;
             }
         }
     }
