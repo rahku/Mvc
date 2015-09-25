@@ -293,7 +293,8 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
                 {
                     BinderModelName = "CustomParameter",
                 },
-                ParameterType = typeof(Person2)
+                ParameterType = typeof(Person2),
+                Name = "TestName"
             };
 
             var operationContext = ModelBindingTestHelper.GetOperationBindingContext(
@@ -352,7 +353,8 @@ namespace Microsoft.AspNet.Mvc.IntegrationTests
                 {
                     BinderModelName = "CustomParameter",
                 },
-                ParameterType = typeof(Person3)
+                ParameterType = typeof(Person3),
+                Name = "SomeName"
             };
 
             var operationContext = ModelBindingTestHelper.GetOperationBindingContext(

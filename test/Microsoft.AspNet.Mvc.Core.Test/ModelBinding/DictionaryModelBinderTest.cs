@@ -122,6 +122,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             context.OperationBindingContext.ModelBinder = CreateCompositeBinder();
             context.OperationBindingContext.ValueProvider = CreateEnumerableValueProvider(keyFormat, dictionary);
             context.ValueProvider = context.OperationBindingContext.ValueProvider;
+            context.FieldName = modelName;
 
             var metadataProvider = context.OperationBindingContext.MetadataProvider;
             context.ModelMetadata = metadataProvider.GetMetadataForProperty(
@@ -206,6 +207,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             var binder = new DictionaryModelBinder<long, int>();
             var context = CreateContext();
             context.ModelName = "prefix";
+            context.FieldName = "prefix";
             context.OperationBindingContext.ModelBinder = CreateCompositeBinder();
             context.OperationBindingContext.ValueProvider =
                 CreateEnumerableValueProvider("prefix[{0}]", stringDictionary);
@@ -248,6 +250,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             var binder = new DictionaryModelBinder<int, ModelWithProperties>();
             var context = CreateContext();
             context.ModelName = "prefix";
+            context.FieldName = "prefix";
             context.OperationBindingContext.ModelBinder = CreateCompositeBinder();
             context.OperationBindingContext.ValueProvider = CreateEnumerableValueProvider("{0}", stringDictionary);
             context.ValueProvider = context.OperationBindingContext.ValueProvider;
@@ -282,6 +285,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             var binder = new DictionaryModelBinder<string, string>();
             var context = CreateContext();
             context.ModelName = modelName;
+            context.FieldName = modelName;
             context.OperationBindingContext.ModelBinder = CreateCompositeBinder();
             context.OperationBindingContext.ValueProvider = CreateEnumerableValueProvider(keyFormat, dictionary);
             context.ValueProvider = context.OperationBindingContext.ValueProvider;

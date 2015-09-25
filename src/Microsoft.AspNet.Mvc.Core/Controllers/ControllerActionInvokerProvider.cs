@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
@@ -10,7 +11,6 @@ using Microsoft.AspNet.Mvc.Formatters;
 using Microsoft.AspNet.Mvc.Infrastructure;
 using Microsoft.AspNet.Mvc.ModelBinding;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.OptionsModel;
 
@@ -60,8 +60,13 @@ namespace Microsoft.AspNet.Mvc.Controllers
         }
 
         /// <inheritdoc />
-        public void OnProvidersExecuting([NotNull] ActionInvokerProviderContext context)
+        public void OnProvidersExecuting(ActionInvokerProviderContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
             var actionDescriptor = context.ActionContext.ActionDescriptor as ControllerActionDescriptor;
 
             if (actionDescriptor != null)
@@ -85,8 +90,12 @@ namespace Microsoft.AspNet.Mvc.Controllers
         }
 
         /// <inheritdoc />
-        public void OnProvidersExecuted([NotNull] ActionInvokerProviderContext context)
+        public void OnProvidersExecuted(ActionInvokerProviderContext context)
         {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
         }
     }
 }

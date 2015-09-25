@@ -15,7 +15,6 @@ using Microsoft.AspNet.Mvc.ApplicationModels;
 using Microsoft.AspNet.Mvc.Controllers;
 using Microsoft.AspNet.Mvc.Routing;
 using Microsoft.AspNet.Routing;
-using Microsoft.Framework.Internal;
 using Microsoft.Framework.Logging;
 using Microsoft.Framework.Logging.Testing;
 using Moq;
@@ -813,7 +812,7 @@ namespace Microsoft.AspNet.Mvc.Infrastructure
 
             public int Order { get; set; }
 
-            public bool Accept([NotNull]ActionConstraintContext context)
+            public bool Accept(ActionConstraintContext context)
             {
                 return Pass;
             }

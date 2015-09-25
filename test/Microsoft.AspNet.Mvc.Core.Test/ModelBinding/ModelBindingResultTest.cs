@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc.ModelBinding.Metadata;
 using Moq;
 using Xunit;
 
@@ -15,7 +16,11 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             // Arrange
             var key = "someName";
             var model = "some model";
-            var validationNode = new ModelValidationNode(key, null, model);
+            var modelMetadataIdentity = ModelMetadataIdentity.ForType(typeof(object));
+            var validationNode = new ModelValidationNode(
+                key,
+                new Mock<ModelMetadata>(modelMetadataIdentity).Object,
+                model);
 
             // Act
             var result = ModelBindingResult.Success(key, model, validationNode);
@@ -33,7 +38,11 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
             // Arrange
             var key = "someName";
             var model = "some model";
-            var validationNode = new ModelValidationNode(key, null, model);
+            var modelMetadataIdentity = ModelMetadataIdentity.ForType(typeof(object));
+            var validationNode = new ModelValidationNode(
+                key,
+                new Mock<ModelMetadata>(modelMetadataIdentity).Object,
+                model);
 
             // Act
             var result = await ModelBindingResult.SuccessAsync(key, model, validationNode);

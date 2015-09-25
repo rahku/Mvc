@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.ApplicationModels;
-using Microsoft.Framework.Internal;
 using Xunit;
 
 namespace Microsoft.Framework.DependencyInjection
@@ -74,7 +73,7 @@ namespace Microsoft.Framework.DependencyInjection
 
         private class SimpleActionConvention : IActionModelConvention
         {
-            public void Apply([NotNull] ActionModel action)
+            public void Apply(ActionModel action)
             {
                 action.Properties.Add("TestProperty", "TestValue");
             }
@@ -82,7 +81,7 @@ namespace Microsoft.Framework.DependencyInjection
 
         private class SimpleControllerConvention : IControllerModelConvention
         {
-            public void Apply([NotNull] ControllerModel controller)
+            public void Apply(ControllerModel controller)
             {
                 controller.Properties.Add("TestProperty", "TestValue");
             }

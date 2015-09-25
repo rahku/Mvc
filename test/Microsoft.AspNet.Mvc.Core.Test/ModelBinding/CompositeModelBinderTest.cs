@@ -28,6 +28,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someName", "dummyValue" }
                 },
+                FieldName = "someName",
             };
 
             var mockIntBinder = new Mock<IModelBinder>();
@@ -71,6 +72,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someOtherName", "dummyValue" }
                 },
+                FieldName = "someName",
             };
 
             var mockIntBinder = new Mock<IModelBinder>();
@@ -118,6 +120,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someOtherName", "dummyValue" }
                 },
+                FieldName = "someName",
             };
 
             var modelBinder = new Mock<IModelBinder>();
@@ -149,6 +152,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someOtherName", "dummyValue" }
                 },
+                FieldName = "someName",
             };
 
             var modelBinder = new Mock<IModelBinder>();
@@ -183,6 +187,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someOtherName", "dummyValue" }
                 },
+                FieldName = "someName"
             };
 
             var modelBinder = new Mock<IModelBinder>();
@@ -218,6 +223,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     { "someOtherName", "dummyValue" }
                 },
+                FieldName = "someName",
             };
 
             var modelBinder = new Mock<IModelBinder>();
@@ -278,6 +284,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 ModelState = new ModelStateDictionary(),
                 OperationBindingContext = new OperationBindingContext(),
                 ValueProvider = new SimpleValueProvider(),
+                FieldName = "fieldName"
             };
 
             // Act
@@ -456,7 +463,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     MetadataProvider = metadataProvider,
                     ModelBinder = binder,
-                }
+                },
+                FieldName = "parameter"
             };
             return bindingContext;
         }

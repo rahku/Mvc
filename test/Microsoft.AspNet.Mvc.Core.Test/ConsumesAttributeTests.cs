@@ -19,11 +19,10 @@ namespace Microsoft.AspNet.Mvc
         [Theory]
         [InlineData("application")]
         [InlineData("")]
-        [InlineData(null)]
         public void Constructor_ForInvalidContentType_Throws(string contentType)
         {
             // Arrange
-            var expectedMessage = string.Format("Invalid value '{0}'.", contentType ?? "<null>");
+            var expectedMessage = string.Format("Invalid value '{0}'.", contentType);
 
             // Act & Assert
             var exception = Assert.Throws<FormatException>(() => new ConsumesAttribute(contentType));

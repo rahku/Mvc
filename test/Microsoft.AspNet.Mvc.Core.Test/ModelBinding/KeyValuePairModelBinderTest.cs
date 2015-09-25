@@ -220,7 +220,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                     HttpContext = new DefaultHttpContext(),
                     MetadataProvider = new TestModelMetadataProvider(),
                     ModelBinder = new SimpleTypeModelBinder(),
-                }
+                },
+                ModelState = new ModelStateDictionary(),
             };
 
             return modelBindingContext;

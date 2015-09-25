@@ -209,14 +209,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
         {
             // Arrange
             var binder = new CollectionModelBinder<int>();
-
-            var context = new ModelBindingContext()
-            {
-                OperationBindingContext = new OperationBindingContext()
-                {
-                    MetadataProvider = TestModelMetadataProvider.CreateDefaultProvider(),
-                },
-            };
+            var context = GetModelBindingContext(new SimpleValueProvider());
 
             // Act
             var boundCollection = await binder.BindSimpleCollection(context, new ValueProviderResult(new string[0]));
@@ -399,7 +392,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Test
                 {
                     ModelBinder = CreateIntBinder(),
                     MetadataProvider = metadataProvider
-                }
+                },
+                FieldName = "testfieldname",
             };
 
             return bindingContext;

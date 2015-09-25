@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc.Core;
 using Microsoft.AspNet.Mvc.ModelBinding.Validation;
-using Microsoft.Framework.Internal;
 
 namespace Microsoft.AspNet.Mvc.ModelBinding
 {
@@ -21,8 +20,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
             typeof(MutableObjectModelBinder).GetTypeInfo().GetDeclaredMethod(nameof(CallPropertyAddRange));
 
         /// <inheritdoc />
-        public Task<ModelBindingResult> BindModelAsync([NotNull] ModelBindingContext bindingContext)
+        public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
             ModelBindingHelper.ValidateBindingContext(bindingContext);
             if (!CanBindType(bindingContext.ModelMetadata))
             {
@@ -70,8 +74,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// <param name="propertyMetadata"><see cref="ModelMetadata"/> for the property of interest.</param>
         /// <returns><c>true</c> if the property can be updated; <c>false</c> otherwise.</returns>
         /// <remarks>Should return <c>true</c> only for properties <see cref="SetProperty"/> can update.</remarks>
-        protected virtual bool CanUpdateProperty([NotNull] ModelMetadata propertyMetadata)
+        protected virtual bool CanUpdateProperty(ModelMetadata propertyMetadata)
         {
+            if (propertyMetadata == null)
+            {
+                throw new ArgumentNullException(nameof(propertyMetadata));
+            }
+
             return CanUpdatePropertyInternal(propertyMetadata);
         }
 
@@ -321,8 +330,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// </summary>
         /// <param name="bindingContext">The <see cref="ModelBindingContext"/>.</param>
         /// <returns>An <see cref="object"/> compatible with <see cref="ModelBindingContext.ModelType"/>.</returns>
-        protected virtual object CreateModel([NotNull] ModelBindingContext bindingContext)
+        protected virtual object CreateModel(ModelBindingContext bindingContext)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
             // If the Activator throws an exception, we want to propagate it back up the call stack, since the
             // application developer should know that this was an invalid type to try to bind to.
             return Activator.CreateInstance(bindingContext.ModelType);
@@ -333,8 +347,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// new instance of <see cref="ModelBindingContext.ModelType"/>.
         /// </summary>
         /// <param name="bindingContext">The <see cref="ModelBindingContext"/>.</param>
-        protected virtual object GetModel([NotNull] ModelBindingContext bindingContext)
+        protected virtual object GetModel(ModelBindingContext bindingContext)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
             if (bindingContext.Model != null)
             {
                 return bindingContext.Model;
@@ -349,8 +368,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// <param name="bindingContext">The <see cref="ModelBindingContext"/>.</param>
         /// <returns>Collection of <see cref="ModelMetadata"/> for properties this binder should update.</returns>
         protected virtual IEnumerable<ModelMetadata> GetMetadataForProperties(
-            [NotNull] ModelBindingContext bindingContext)
+            ModelBindingContext bindingContext)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
             var validationInfo = GetPropertyValidationInfo(bindingContext);
             var newPropertyFilter = GetPropertyFilter();
             return bindingContext.ModelMetadata.Properties
@@ -459,11 +483,26 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// <param name="result">The <see cref="ModelBindingResult"/> for the property's new value.</param>
         /// <remarks>Should succeed in all cases that <see cref="CanUpdateProperty"/> returns <c>true</c>.</remarks>
         protected virtual void SetProperty(
-            [NotNull] ModelBindingContext bindingContext,
-            [NotNull] ModelExplorer modelExplorer,
-            [NotNull] ModelMetadata propertyMetadata,
-            [NotNull] ModelBindingResult result)
+            ModelBindingContext bindingContext,
+            ModelExplorer modelExplorer,
+            ModelMetadata propertyMetadata,
+            ModelBindingResult result)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
+            if (modelExplorer == null)
+            {
+                throw new ArgumentNullException(nameof(modelExplorer));
+            }
+
+            if (propertyMetadata == null)
+            {
+                throw new ArgumentNullException(nameof(propertyMetadata));
+            }
+
             var bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
             var property = bindingContext.ModelType.GetProperty(propertyMetadata.PropertyName, bindingFlags);
 

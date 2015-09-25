@@ -10,7 +10,6 @@ using System.Reflection;
 #endif
 using System.Threading.Tasks;
 using Microsoft.AspNet.Http;
-using Microsoft.Framework.Internal;
 using Microsoft.Net.Http.Headers;
 
 namespace Microsoft.AspNet.Mvc.ModelBinding
@@ -21,8 +20,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
     public class FormFileModelBinder : IModelBinder
     {
         /// <inheritdoc />
-        public Task<ModelBindingResult> BindModelAsync([NotNull] ModelBindingContext bindingContext)
+        public Task<ModelBindingResult> BindModelAsync(ModelBindingContext bindingContext)
         {
+            if (bindingContext == null)
+            {
+                throw new ArgumentNullException(nameof(bindingContext));
+            }
+
             // This method is optimized to use cached tasks when possible and avoid allocating
             // using Task.FromResult. If you need to make changes of this nature, profile
             // allocations afterwards and look for Task<ModelBindingResult>.
@@ -37,7 +41,7 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         }
 
         private async Task<ModelBindingResult> BindModelCoreAsync(ModelBindingContext bindingContext)
-        { 
+        {
             object value;
             if (bindingContext.ModelType == typeof(IFormFile))
             {
@@ -55,13 +59,13 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
                 Debug.Fail("We shouldn't be called without a matching type.");
                 return ModelBindingResult.NoResult;
             }
-            
+
             if (value == null)
             {
                 return ModelBindingResult.Failed(bindingContext.ModelName);
             }
             else
-            { 
+            {
                 var validationNode =
                     new ModelValidationNode(bindingContext.ModelName, bindingContext.ModelMetadata, value)
                     {

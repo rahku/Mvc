@@ -315,7 +315,6 @@ namespace Microsoft.AspNet.Mvc.Controllers
             ControllerModel controller,
             ActionModel action)
         {
-            
             var isVisible = 
                 action.ApiExplorer?.IsVisible ?? 
                 controller.ApiExplorer?.IsVisible ?? 

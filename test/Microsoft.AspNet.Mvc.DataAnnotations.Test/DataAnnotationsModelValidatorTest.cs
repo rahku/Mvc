@@ -232,8 +232,8 @@ namespace Microsoft.AspNet.Mvc.ModelBinding.Validation
         {
             return new ModelValidationContext(
                 bindingSource: null,
-                modelState: null,
-                validatorProvider: null,
+                modelState: new ModelStateDictionary(),
+                validatorProvider: new DataAnnotationsModelValidatorProvider(),
                 modelExplorer: modelExplorer);
         }
 

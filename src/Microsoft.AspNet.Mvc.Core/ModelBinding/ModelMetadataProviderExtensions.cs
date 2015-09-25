@@ -3,7 +3,6 @@
 
 using System;
 using Microsoft.AspNet.Mvc.Core;
-using Microsoft.Framework.Internal;
 
 namespace Microsoft.AspNet.Mvc.ModelBinding
 {
@@ -23,10 +22,20 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// A <see cref="ModelExplorer"/> for the <paramref name="modelType"/> and <paramref name="model"/>.
         /// </returns>
         public static ModelExplorer GetModelExplorerForType(
-            [NotNull] this IModelMetadataProvider provider,
-            [NotNull] Type modelType,
+            this IModelMetadataProvider provider,
+            Type modelType,
             object model)
         {
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (modelType == null)
+            {
+                throw new ArgumentNullException(nameof(modelType));
+            }
+
             var modelMetadata = provider.GetMetadataForType(modelType);
             return new ModelExplorer(provider, modelMetadata, model);
         }
@@ -40,10 +49,25 @@ namespace Microsoft.AspNet.Mvc.ModelBinding
         /// <param name="propertyName">The property name.</param>
         /// <returns>A <see cref="ModelMetadata"/> for the property.</returns>
         public static ModelMetadata GetMetadataForProperty(
-            [NotNull] this IModelMetadataProvider provider,
-            [NotNull] Type containerType,
-            [NotNull] string propertyName)
+            this IModelMetadataProvider provider,
+            Type containerType,
+            string propertyName)
         {
+            if (provider == null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (containerType == null)
+            {
+                throw new ArgumentNullException(nameof(containerType));
+            }
+
+            if (propertyName == null)
+            {
+                throw new ArgumentNullException(nameof(propertyName));
+            }
+
             var containerMetadata = provider.GetMetadataForType(containerType);
 
             var propertyMetadata = containerMetadata.Properties[propertyName];

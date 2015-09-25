@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Http.Internal;
+using Microsoft.AspNet.Mvc.Abstractions;
 using Microsoft.AspNet.Mvc.Filters;
 using Microsoft.AspNet.Routing;
 using Xunit;
@@ -152,7 +153,7 @@ namespace Microsoft.AspNet.Mvc
 
         private static AuthorizationContext CreateAuthorizationContext(HttpContext ctx)
         {
-            var actionContext = new ActionContext(ctx, new RouteData(), actionDescriptor: null);
+            var actionContext = new ActionContext(ctx, new RouteData(), new ActionDescriptor());
 
             return new AuthorizationContext(actionContext, Enumerable.Empty<IFilterMetadata>().ToList());
         }

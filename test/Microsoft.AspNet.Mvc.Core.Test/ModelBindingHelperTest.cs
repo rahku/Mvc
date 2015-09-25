@@ -46,7 +46,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Act
             var result = await ModelBindingHelper.TryUpdateModelAsync(
                 model,
-                null,
+                "",
                 Mock.Of<HttpContext>(),
                 new ModelStateDictionary(),
                 metadataProvider,
@@ -158,7 +158,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Act
             var result = await ModelBindingHelper.TryUpdateModelAsync(
                 model,
-                null,
+                "",
                 Mock.Of<HttpContext>(),
                 new ModelStateDictionary(),
                 metadataProvider,
@@ -247,7 +247,7 @@ namespace Microsoft.AspNet.Mvc.Test
             // Act
             var result = await ModelBindingHelper.TryUpdateModelAsync(
                 model,
-                null,
+                "",
                 Mock.Of<HttpContext>(),
                 new ModelStateDictionary(),
                 metadataProvider,
@@ -505,7 +505,7 @@ namespace Microsoft.AspNet.Mvc.Test
             var result = await ModelBindingHelper.TryUpdateModelAsync(
                 model,
                 model.GetType(),
-                prefix: null,
+                prefix: "",
                 httpContext: Mock.Of<HttpContext>(),
                 modelState: new ModelStateDictionary(),
                 metadataProvider: metadataProvider,
@@ -560,20 +560,20 @@ namespace Microsoft.AspNet.Mvc.Test
 
             // Act
             var result = await ModelBindingHelper.TryUpdateModelAsync(
-                                                    model,
-                                                    model.GetType(),
-                                                    "",
-                                                    Mock.Of<HttpContext>(),
-                                                    modelStateDictionary,
-                                                    metadataProvider,
-                                                    GetCompositeBinder(binders),
-                                                    valueProvider,
-                                                    new List<IInputFormatter>(),
-                                                    new DefaultObjectValidator(
-                                                        new IExcludeTypeValidationFilter[0],
-                                                        metadataProvider),
-                                                    validator,
-                                                    includePredicate);
+                model,
+                model.GetType(),
+                "",
+                Mock.Of<HttpContext>(),
+                modelStateDictionary,
+                metadataProvider,
+                GetCompositeBinder(binders),
+                valueProvider,
+                new List<IInputFormatter>(),
+                new DefaultObjectValidator(
+                    new IExcludeTypeValidationFilter[0],
+                    metadataProvider),
+                validator,
+                includePredicate);
 
             // Assert
             Assert.True(result);
@@ -599,7 +599,7 @@ namespace Microsoft.AspNet.Mvc.Test
             var result = await ModelBindingHelper.TryUpdateModelAsync(
                 model,
                 modelType: model.GetType(),
-                prefix: null,
+                prefix: "prefix",
                 httpContext: Mock.Of<HttpContext>(),
                 modelState: new ModelStateDictionary(),
                 metadataProvider: metadataProvider,
@@ -637,19 +637,19 @@ namespace Microsoft.AspNet.Mvc.Test
 
             // Act
             var result = await ModelBindingHelper.TryUpdateModelAsync(
-                                                    model,
-                                                    model.GetType(),
-                                                    "",
-                                                    Mock.Of<HttpContext>(),
-                                                    modelStateDictionary,
-                                                    TestModelMetadataProvider.CreateDefaultProvider(),
-                                                    GetCompositeBinder(binders),
-                                                    valueProvider,
-                                                    new List<IInputFormatter>(),
-                                                    new DefaultObjectValidator(
-                                                        new IExcludeTypeValidationFilter[0],
-                                                        metadataProvider),
-                                                    validator);
+                model,
+                model.GetType(),
+                "",
+                Mock.Of<HttpContext>(),
+                modelStateDictionary,
+                TestModelMetadataProvider.CreateDefaultProvider(),
+                GetCompositeBinder(binders),
+                valueProvider,
+                new List<IInputFormatter>(),
+                new DefaultObjectValidator(
+                    new IExcludeTypeValidationFilter[0],
+                    metadataProvider),
+                validator);
 
             // Assert
             Assert.True(result);
@@ -672,20 +672,20 @@ namespace Microsoft.AspNet.Mvc.Test
             // Act & Assert
             var exception = await Assert.ThrowsAsync<ArgumentException>(
                 () => ModelBindingHelper.TryUpdateModelAsync(
-                                                    model,
-                                                    typeof(User),
-                                                    null,
-                                                    Mock.Of<HttpContext>(),
-                                                    new ModelStateDictionary(),
-                                                    metadataProvider,
-                                                    GetCompositeBinder(binder.Object),
-                                                    Mock.Of<IValueProvider>(),
-                                                    new List<IInputFormatter>(),
-                                                    new DefaultObjectValidator(
-                                                        new IExcludeTypeValidationFilter[0],
-                                                        metadataProvider),
-                                                    Mock.Of<IModelValidatorProvider>(),
-                                                    includePredicate));
+                    model,
+                    typeof(User),
+                    "prefix",
+                    Mock.Of<HttpContext>(),
+                    new ModelStateDictionary(),
+                    metadataProvider,
+                    GetCompositeBinder(binder.Object),
+                    Mock.Of<IValueProvider>(),
+                    new List<IInputFormatter>(),
+                    new DefaultObjectValidator(
+                        new IExcludeTypeValidationFilter[0],
+                        metadataProvider),
+                    Mock.Of<IModelValidatorProvider>(),
+                    includePredicate));
 
             var expectedMessage = string.Format("The model's runtime type '{0}' is not assignable to the type '{1}'." +
                 Environment.NewLine +
